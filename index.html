@@ -40,7 +40,6 @@
     a:hover { text-decoration: underline; }
     .container { max-width: 760px; margin: 0 auto; padding: 0 28px; }
 
-    /* HERO */
     .hero {
       padding: 90px 28px 50px;
       text-align: center;
@@ -78,7 +77,7 @@
     .hero-sub {
       color: var(--muted);
       font-size: 1.1rem;
-      max-width: 500px;
+      max-width: 520px;
       margin: 0 auto 32px;
     }
     .byline {
@@ -92,7 +91,6 @@
     .byline span { display: flex; align-items: center; gap: 6px; }
     .byline .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border); }
 
-    /* ARTICLE */
     article { padding-bottom: 80px; }
     article h2 {
       font-family: 'Playfair Display', serif;
@@ -102,12 +100,18 @@
       margin: 64px 0 16px;
       scroll-margin-top: 40px;
     }
+    article h3 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-bright);
+      margin: 36px 0 10px;
+    }
     article p { margin-bottom: 18px; }
     article strong { color: var(--text-bright); }
     article ul, article ol { margin-bottom: 18px; padding-left: 24px; }
     article li { margin-bottom: 6px; }
 
-    /* ANALOGY CARDS */
     .analogy-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -125,12 +129,11 @@
     .analogy-card.api { border-color: var(--orange); box-shadow: 0 0 30px var(--orange-dim); }
     .analogy-card.mcp { border-color: var(--accent); box-shadow: 0 0 30px var(--accent-dim); }
     .analogy-icon { font-size: 2.2rem; margin-bottom: 14px; }
-    .analogy-card h3 { font-size: 1rem; font-weight: 700; color: var(--text-bright); margin-bottom: 8px; }
+    .analogy-card h3 { font-size: 1rem; font-weight: 700; color: var(--text-bright); margin-bottom: 8px; margin-top: 0; }
     .analogy-card.api h3 { color: var(--orange); }
     .analogy-card.mcp h3 { color: var(--accent); }
     .analogy-card p { font-size: 0.92rem; color: var(--muted); margin-bottom: 0; line-height: 1.6; }
 
-    /* CALLOUT */
     .callout {
       background: var(--surface);
       border-left: 3px solid var(--accent);
@@ -141,8 +144,11 @@
     }
     .callout p { margin-bottom: 0; }
     .callout strong { color: var(--accent); }
+    .callout.warn { border-left-color: var(--orange); }
+    .callout.warn strong { color: var(--orange); }
+    .callout.green { border-left-color: var(--green); }
+    .callout.green strong { color: var(--green); }
 
-    /* DIAGRAM */
     .diagram-container {
       display: grid;
       grid-template-columns: 1fr auto 1fr;
@@ -191,7 +197,6 @@
       color: var(--muted);
     }
 
-    /* CODE BLOCKS */
     .code-block {
       margin: 20px 0 28px;
       border-radius: var(--radius);
@@ -236,7 +241,22 @@
       color: var(--accent);
     }
 
-    /* TABLE */
+    .explain-list {
+      margin: 16px 0 24px;
+      padding-left: 0;
+      list-style: none;
+    }
+    .explain-list li {
+      padding: 8px 0 8px 20px;
+      position: relative;
+      font-size: 0.93rem;
+      border-left: 2px solid var(--border);
+      margin-bottom: 4px;
+    }
+    .explain-list li code {
+      font-weight: 500;
+    }
+
     .table-wrap {
       overflow-x: auto;
       margin: 24px 0;
@@ -262,7 +282,6 @@
     table.cmp td:first-child { font-weight: 600; color: var(--muted); }
     table.cmp tbody tr:hover td { background: var(--surface); }
 
-    /* TAKEAWAY */
     .takeaway {
       background: linear-gradient(135deg, var(--surface), var(--surface-2));
       border: 1px solid var(--border);
@@ -274,7 +293,6 @@
     .takeaway h2 { font-family: 'Playfair Display', serif; margin: 0 0 14px !important; font-size: 1.4rem; }
     .takeaway p { margin-bottom: 0; max-width: 550px; margin-inline: auto; }
 
-    /* ANIMATIONS */
     .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.5s ease, transform 0.5s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
 
@@ -302,20 +320,20 @@
   <div class="hero-label">Explained Simply</div>
   <h1>MCP vs API &mdash; What&rsquo;s the Difference?</h1>
   <p class="hero-sub">
-    A plain-English guide with real code you can run.
+    A plain-English guide with real, runnable code. No API keys needed.
   </p>
   <div class="byline">
     <span>Ritvik Gaur</span>
     <span class="dot"></span>
     <span>January 2026</span>
     <span class="dot"></span>
-    <span>6 min read</span>
+    <span>8 min read</span>
   </div>
 </header>
 
 <article class="container">
 
-  <!-- ====== 1. ONE-LINER ====== -->
+  <!-- ====== 1. THE SHORT ANSWER ====== -->
   <h2 class="reveal">The Short Answer</h2>
 
   <div class="analogy-grid reveal">
@@ -340,7 +358,7 @@
     <p><strong>MCP doesn't replace APIs.</strong> MCP servers usually <em>wrap</em> APIs. It's a standard layer on top that lets AI find and use tools on its own.</p>
   </div>
 
-  <!-- ====== 2. THE PROBLEM ====== -->
+  <!-- ====== 2. WHY MCP EXISTS ====== -->
   <h2 class="reveal">Why Does MCP Exist?</h2>
 
   <p class="reveal">
@@ -351,11 +369,15 @@
     10 apps &times; 10 tools = <strong>100 custom integrations.</strong>
   </p>
   <p class="reveal">
-    MCP fixes this. One standard protocol, and every app just speaks MCP. <br>
+    MCP fixes this. One standard protocol, every app just speaks MCP.<br>
     10 apps + 10 tools = <strong>20 connections.</strong> Done.
   </p>
 
-  <!-- ====== 3. VISUAL ====== -->
+  <div class="callout green reveal">
+    <p><strong>No API keys needed.</strong> MCP is just a protocol &mdash; a way for programs to talk. The MCP server and client we build below don't need any LLM key, OpenAI key, or Anthropic key. They work on their own. An AI host like Claude Desktop uses its <em>own</em> key separately &mdash; MCP doesn't care about that.</p>
+  </div>
+
+  <!-- ====== 3. SEE THE DIFFERENCE ====== -->
   <h2 class="reveal">See the Difference</h2>
 
   <div class="diagram-container reveal">
@@ -379,12 +401,12 @@
       <div class="diagram-label">With MCP</div>
       <div class="d-flow">
         <div class="d-node d-app">Your AI App</div>
-        <div class="d-arrow">| one protocol</div>
+        <div class="d-arrow">| one standard protocol</div>
         <div class="d-arrow">&#x25BC;</div>
         <div class="d-node d-server">Weather Server</div>
         <div class="d-node d-server" style="margin-top:4px">GitHub Server</div>
         <div class="d-node d-server" style="margin-top:4px">DB Server</div>
-        <div class="d-arrow" style="margin-top:8px">| servers wrap the APIs</div>
+        <div class="d-arrow" style="margin-top:8px">| each server wraps its API</div>
         <div class="d-arrow">&#x25BC;</div>
         <div class="d-node d-api">Any Service</div>
       </div>
@@ -392,16 +414,16 @@
   </div>
 
   <p class="reveal">
-    Left: your app needs to understand every API. <br>
-    Right: your app speaks <strong>one language</strong>. Each MCP server handles the rest.
+    Left: your app needs to understand every API individually.<br>
+    Right: your app speaks <strong>one language</strong>. Each MCP server handles the translation.
   </p>
 
-  <!-- ====== 4. SHOW ME THE CODE ====== -->
-  <h2 class="reveal">Show Me the Code</h2>
+  <!-- ====== 4. THE OLD WAY ====== -->
+  <h2 class="reveal">The Old Way &mdash; Call the API Yourself</h2>
 
-  <p class="reveal">Let's build a weather tool both ways so you can see the difference.</p>
-
-  <h3 class="reveal" style="color:var(--orange); margin-top:32px;">The Old Way &mdash; call the API yourself</h3>
+  <p class="reveal">
+    Let's build a weather tool. First, the traditional way &mdash; calling the <a href="https://www.weather.gov/documentation/services-web-api">National Weather Service API</a> directly:
+  </p>
 
   <div class="code-block reveal">
     <div class="code-header">
@@ -410,87 +432,259 @@
     </div>
     <pre><code class="language-python">import httpx
 
-def get_forecast(lat: float, lon: float) -> str:
-    """You write ALL of this for every single API."""
+NWS_BASE = "https://api.weather.gov"
+HEADERS = {"User-Agent": "weather-app/1.0"}
+
+def get_forecast(latitude: float, longitude: float) -> str:
+    """Fetch forecast — custom code for this one specific API."""
     with httpx.Client() as client:
+        # Step 1: Get the forecast grid endpoint for this location
         points = client.get(
-            f"https://api.weather.gov/points/{lat},{lon}",
-            headers={"User-Agent": "app/1.0"},
+            f"{NWS_BASE}/points/{latitude},{longitude}",
+            headers=HEADERS, timeout=30.0,
         ).json()
+
+        # Step 2: Get the actual forecast from the grid endpoint
+        forecast_url = points["properties"]["forecast"]
         forecast = client.get(
-            points["properties"]["forecast"],
-            headers={"User-Agent": "app/1.0"},
+            forecast_url, headers=HEADERS, timeout=30.0,
         ).json()
 
-    return forecast["properties"]["periods"][0]["detailedForecast"]
+    # Step 3: Format the first 3 periods into readable text
+    periods = forecast["properties"]["periods"][:3]
+    return "\n".join(
+        f"{p['name']}: {p['temperature']}°{p['temperatureUnit']}, "
+        f"{p['detailedForecast']}"
+        for p in periods
+    )
 
-print(get_forecast(37.77, -122.42))</code></pre>
+# Run it
+print(get_forecast(37.7749, -122.4194))</code></pre>
   </div>
 
+  <p class="reveal">What's happening here:</p>
+  <ul class="explain-list reveal">
+    <li><code>httpx</code> is an HTTP library (like <code>requests</code>, but with async support). We use it to make web requests.</li>
+    <li>The NWS API is free, no key needed. We just need a <code>User-Agent</code> header.</li>
+    <li>It takes two requests: first get the grid point, then get the forecast for that grid.</li>
+    <li>We manually parse the JSON and format the output.</li>
+  </ul>
+
   <p class="reveal">
-    This works, but it's <strong>glued to one API</strong>. Want to add GitHub search? Write it all again. Different URL, different auth, different format. Repeat forever.
+    This works great. But it's <strong>glued to one API</strong>. Want to add GitHub search? Write another function with different URLs, different auth, different response format. Every new tool = more custom code inside your app.
   </p>
 
-  <h3 class="reveal" style="color:var(--accent); margin-top:32px;">The MCP Way &mdash; build a server once, use it anywhere</h3>
+  <!-- ====== 5. THE MCP WAY ====== -->
+  <h2 class="reveal">The MCP Way &mdash; Build a Server</h2>
+
+  <p class="reveal">
+    Now let's wrap that same weather API as an MCP server. The server is a standalone program that <strong>any</strong> AI can use &mdash; Claude, Cursor, your own agent, whatever.
+  </p>
+
+  <h3 class="reveal">Install the MCP SDK</h3>
+
+  <div class="code-block reveal">
+    <div class="code-header">
+      <span class="code-filename">terminal</span>
+      <span class="code-lang">Shell</span>
+    </div>
+    <pre><code class="language-python">pip install "mcp[cli]" httpx</code></pre>
+  </div>
+
+  <h3 class="reveal">The server (full code)</h3>
 
   <div class="code-block reveal">
     <div class="code-header">
       <span class="code-filename">server.py</span>
       <span class="code-lang">Python</span>
     </div>
-    <pre><code class="language-python">import httpx
+    <pre><code class="language-python">from typing import Any
+import httpx
 from mcp.server.fastmcp import FastMCP
 
+# Create an MCP server called "weather"
 mcp = FastMCP("weather")
+
+NWS_API_BASE = "https://api.weather.gov"
+USER_AGENT = "weather-mcp-server/1.0"
+
+
+async def make_nws_request(url: str) -> dict[str, Any] | None:
+    """Helper: make a request to the NWS API."""
+    headers = {"User-Agent": USER_AGENT, "Accept": "application/geo+json"}
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(url, headers=headers, timeout=30.0)
+            response.raise_for_status()
+            return response.json()
+        except (httpx.HTTPError, ValueError):
+            return None
+
 
 @mcp.tool()
 async def get_forecast(latitude: float, longitude: float) -> str:
-    """Get weather forecast for a location."""
-    async with httpx.AsyncClient() as client:
-        points = await client.get(
-            f"https://api.weather.gov/points/{latitude},{longitude}",
-            headers={"User-Agent": "app/1.0"},
-        )
-        forecast_url = points.json()["properties"]["forecast"]
-        forecast = await client.get(forecast_url, headers={"User-Agent": "app/1.0"})
-    return forecast.json()["properties"]["periods"][0]["detailedForecast"]
+    """Get weather forecast for a location.
 
+    Args:
+        latitude: Latitude of the location
+        longitude: Longitude of the location
+    """
+    points_url = f"{NWS_API_BASE}/points/{latitude},{longitude}"
+    points_data = await make_nws_request(points_url)
+
+    if not points_data:
+        return "Unable to fetch forecast data for this location."
+
+    forecast_url = points_data["properties"]["forecast"]
+    forecast_data = await make_nws_request(forecast_url)
+
+    if not forecast_data:
+        return "Unable to fetch detailed forecast."
+
+    periods = forecast_data["properties"]["periods"]
+    return "\n---\n".join(
+        f"{p['name']}:\n"
+        f"  Temperature: {p['temperature']}°{p['temperatureUnit']}\n"
+        f"  Wind: {p['windSpeed']} {p['windDirection']}\n"
+        f"  {p['detailedForecast']}"
+        for p in periods[:5]
+    )
+
+
+@mcp.tool()
+async def get_alerts(state: str) -> str:
+    """Get active weather alerts for a US state.
+
+    Args:
+        state: Two-letter US state code (e.g. CA, NY)
+    """
+    url = f"{NWS_API_BASE}/alerts/active/area/{state}"
+    data = await make_nws_request(url)
+
+    if not data or "features" not in data:
+        return "Unable to fetch alerts or no alerts found."
+
+    if not data["features"]:
+        return "No active alerts for this state."
+
+    alerts = []
+    for feature in data["features"]:
+        props = feature["properties"]
+        alerts.append(
+            f"Event: {props.get('event', 'Unknown')}\n"
+            f"Area: {props.get('areaDesc', 'Unknown')}\n"
+            f"Severity: {props.get('severity', 'Unknown')}"
+        )
+    return "\n---\n".join(alerts)
+
+
+# Start the server
 if __name__ == "__main__":
     mcp.run(transport="stdio")</code></pre>
   </div>
 
-  <p class="reveal">
-    That's it. The <code>@mcp.tool()</code> decorator turns any function into a tool that <strong>any AI can discover and call</strong>. No hardcoded schemas. No manual dispatch. The AI just asks: <em>"what tools do you have?"</em> and the server answers.
-  </p>
+  <p class="reveal">Let's break this down line by line:</p>
+  <ul class="explain-list reveal">
+    <li><code>FastMCP("weather")</code> &mdash; creates a new MCP server with the name "weather". That's the identity other programs use to find it.</li>
+    <li><code>@mcp.tool()</code> &mdash; this decorator is the magic. It turns a normal Python function into an MCP tool. The SDK reads the function's name, arguments, and docstring and <strong>auto-generates</strong> the tool schema. No manual JSON schema needed.</li>
+    <li><code>make_nws_request</code> &mdash; just a helper. It's not an MCP concept. The actual API call logic stays the same as the old way.</li>
+    <li><code>get_forecast</code> and <code>get_alerts</code> &mdash; two tools. Any MCP client can discover and call them.</li>
+    <li><code>mcp.run(transport="stdio")</code> &mdash; starts the server. It communicates via standard input/output, which is how Claude Desktop and Cursor talk to local MCP servers.</li>
+  </ul>
 
-  <h3 class="reveal" style="margin-top:32px;">How does the AI use it?</h3>
+  <div class="callout reveal">
+    <p><strong>Key difference from the old way:</strong> This server doesn't know or care what AI model will use it. It doesn't import OpenAI. It doesn't need any API key. It just exposes tools and lets the protocol handle the rest.</p>
+  </div>
+
+  <!-- ====== 6. THE CLIENT ====== -->
+  <h2 class="reveal">The Client &mdash; How AI Finds and Uses Tools</h2>
+
+  <p class="reveal">
+    Now let's write a client that connects to our server, discovers the tools, and calls them. This is what AI hosts like Claude Desktop do under the hood:
+  </p>
 
   <div class="code-block reveal">
     <div class="code-header">
       <span class="code-filename">client.py</span>
       <span class="code-lang">Python</span>
     </div>
-    <pre><code class="language-python">from mcp import ClientSession, StdioServerParameters
+    <pre><code class="language-python">import asyncio
+import sys
+from pathlib import Path
+from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
-async with stdio_client(StdioServerParameters(
-    command="python", args=["server.py"]
-)) as (read, write):
-    async with ClientSession(read, write) as session:
-        await session.initialize()
+SERVER_SCRIPT = Path(__file__).parent / "server.py"
 
-        tools = await session.list_tools()      # "What can you do?"
-        result = await session.call_tool(       # "Do this."
-            "get_forecast",
-            {"latitude": 37.77, "longitude": -122.42},
-        )</code></pre>
+async def main():
+    print("Connecting to weather MCP server...\n")
+
+    # Tell the client how to start the server
+    server_params = StdioServerParameters(
+        command=sys.executable,          # use current Python
+        args=[str(SERVER_SCRIPT)],       # run server.py
+    )
+
+    # Connect to the server
+    async with stdio_client(server_params) as (read, write):
+        async with ClientSession(read, write) as session:
+            await session.initialize()
+
+            # Step 1: Ask "what tools do you have?"
+            tools = await session.list_tools()
+            print("Available tools:")
+            for tool in tools.tools:
+                print(f"  - {tool.name}: {tool.description}")
+
+            # Step 2: Call a tool by name
+            print("\nFetching forecast for San Francisco...\n")
+            result = await session.call_tool(
+                "get_forecast",
+                arguments={"latitude": 37.7749, "longitude": -122.4194},
+            )
+            print(result.content[0].text)
+
+asyncio.run(main())</code></pre>
+  </div>
+
+  <p class="reveal">What's happening here:</p>
+  <ul class="explain-list reveal">
+    <li><code>StdioServerParameters</code> &mdash; tells the client how to start the server. It will run <code>python server.py</code> as a subprocess.</li>
+    <li><code>session.initialize()</code> &mdash; the client and server shake hands and agree on the protocol version.</li>
+    <li><code>session.list_tools()</code> &mdash; the client asks: <em>"what tools do you have?"</em> The server responds with names, descriptions, and parameter schemas. <strong>No hardcoding needed.</strong></li>
+    <li><code>session.call_tool("get_forecast", ...)</code> &mdash; the client calls a tool by name and passes arguments. The server runs the function and returns the result.</li>
+  </ul>
+
+  <div class="callout warn reveal">
+    <p><strong>This is the whole point:</strong> this same client code works with <em>any</em> MCP server. Swap the weather server for a GitHub server, a database server, a file-system server &mdash; the client code doesn't change. The protocol is the same.</p>
+  </div>
+
+  <!-- ====== 7. TRY IT YOURSELF ====== -->
+  <h2 class="reveal">Try It Yourself</h2>
+
+  <p class="reveal">All the code above is real and runnable. Clone the repo and try both approaches:</p>
+
+  <div class="code-block reveal">
+    <div class="code-header">
+      <span class="code-filename">terminal</span>
+      <span class="code-lang">Shell</span>
+    </div>
+    <pre><code class="language-python">git clone https://github.com/Ritvik777/MCP-vs-API.git
+cd MCP-vs-API
+pip install -r requirements.txt
+
+# Run the old way (direct API call)
+python agent_old_way.py
+
+# Run the MCP way (client discovers and calls server tools)
+python client.py</code></pre>
   </div>
 
   <p class="reveal">
-    <strong>This same code works with ANY MCP server.</strong> Swap the weather server for GitHub, a database, a file system &mdash; the client code doesn't change. That's the whole point.
+    Both will fetch a live weather forecast for San Francisco. Same result, very different architecture.
   </p>
 
-  <!-- ====== 5. COMPARISON ====== -->
+  <!-- ====== 8. COMPARISON TABLE ====== -->
   <h2 class="reveal">Quick Comparison</h2>
 
   <div class="table-wrap reveal">
@@ -502,7 +696,7 @@ async with stdio_client(StdioServerParameters(
         <tr>
           <td>What is it</td>
           <td>Programs talking to programs</td>
-          <td>AI talking to tools</td>
+          <td>AI discovering and using tools</td>
         </tr>
         <tr>
           <td>Adding a tool</td>
@@ -520,6 +714,11 @@ async with stdio_client(StdioServerParameters(
           <td>Any AI host can use the same server</td>
         </tr>
         <tr>
+          <td>Needs LLM key?</td>
+          <td>Depends on the API</td>
+          <td>No &mdash; MCP itself needs no keys</td>
+        </tr>
+        <tr>
           <td>Analogy</td>
           <td>Different charger for every phone</td>
           <td>USB-C &mdash; one cable for everything</td>
@@ -528,7 +727,7 @@ async with stdio_client(StdioServerParameters(
     </table>
   </div>
 
-  <!-- ====== 6. BOTTOM LINE ====== -->
+  <!-- ====== 9. BOTTOM LINE ====== -->
   <div class="takeaway reveal">
     <h2>The bottom line</h2>
     <p>
