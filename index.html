@@ -462,16 +462,19 @@ def get_forecast(latitude: float, longitude: float) -> str:
 print(get_forecast(37.7749, -122.4194))</code></pre>
   </div>
 
-  <p class="reveal">What's happening here:</p>
+  <p class="reveal">Let's walk through this like reading a recipe:</p>
   <ul class="explain-list reveal">
-    <li><code>httpx</code> is an HTTP library (like <code>requests</code>, but with async support). We use it to make web requests.</li>
-    <li>The NWS API is free, no key needed. We just need a <code>User-Agent</code> header.</li>
-    <li>It takes two requests: first get the grid point, then get the forecast for that grid.</li>
-    <li>We manually parse the JSON and format the output.</li>
+    <li><code>import httpx</code> &mdash; this loads a library that lets Python visit websites and get data back. Think of it as giving Python a web browser.</li>
+    <li><code>NWS_BASE = "https://api.weather.gov"</code> &mdash; this is the address of the weather service. Like saving a restaurant's phone number in your contacts.</li>
+    <li><code>HEADERS = {"User-Agent": "weather-app/1.0"}</code> &mdash; the weather service wants to know who's calling. This is us saying "hi, I'm weather-app". No password or key needed.</li>
+    <li><code>client.get(...).json()</code> &mdash; this visits a web address and reads the response. <code>.json()</code> turns the raw response into a Python dictionary we can work with.</li>
+    <li>We make <strong>two requests</strong>: first we ask "where is this location on your grid?", then we ask "what's the forecast for that grid spot?"</li>
+    <li><code>periods[:3]</code> &mdash; the forecast comes back in chunks (Today, Tonight, Tomorrow...). We grab the first 3.</li>
+    <li><code>print(get_forecast(37.7749, -122.4194))</code> &mdash; run it! Those numbers are San Francisco's latitude and longitude.</li>
   </ul>
 
   <p class="reveal">
-    This works great. But it's <strong>glued to one API</strong>. Want to add GitHub search? Write another function with different URLs, different auth, different response format. Every new tool = more custom code inside your app.
+    This works. But notice: <strong>everything is hardwired</strong>. The URL, the headers, the way we parse the response &mdash; it's all specific to this one weather service. Want to add GitHub search? You'd write a completely different function with different URLs, different auth, different response format. Every new tool means more custom code glued into your app.
   </p>
 
   <!-- ====== 5. THE MCP WAY ====== -->
@@ -583,17 +586,20 @@ if __name__ == "__main__":
     mcp.run(transport="stdio")</code></pre>
   </div>
 
-  <p class="reveal">Let's break this down line by line:</p>
+  <p class="reveal">Let's walk through what each part does:</p>
   <ul class="explain-list reveal">
-    <li><code>FastMCP("weather")</code> &mdash; creates a new MCP server with the name "weather". That's the identity other programs use to find it.</li>
-    <li><code>@mcp.tool()</code> &mdash; this decorator is the magic. It turns a normal Python function into an MCP tool. The SDK reads the function's name, arguments, and docstring and <strong>auto-generates</strong> the tool schema. No manual JSON schema needed.</li>
-    <li><code>make_nws_request</code> &mdash; just a helper. It's not an MCP concept. The actual API call logic stays the same as the old way.</li>
-    <li><code>get_forecast</code> and <code>get_alerts</code> &mdash; two tools. Any MCP client can discover and call them.</li>
-    <li><code>mcp.run(transport="stdio")</code> &mdash; starts the server. It communicates via standard input/output, which is how Claude Desktop and Cursor talk to local MCP servers.</li>
+    <li><code>from mcp.server.fastmcp import FastMCP</code> &mdash; loads the MCP toolkit. This is what turns a normal Python script into a server that AI can talk to.</li>
+    <li><code>mcp = FastMCP("weather")</code> &mdash; creates a server and gives it a name: "weather". This is like naming your restaurant so the delivery app can list it.</li>
+    <li><code>@mcp.tool()</code> &mdash; <strong>this is the magic line.</strong> Put it above any function and that function becomes a tool any AI can find and use. You don't need to write any extra configuration &mdash; the SDK reads your function name, its inputs, and the description, and creates the "menu" automatically.</li>
+    <li><code>async def get_forecast(latitude: float, longitude: float)</code> &mdash; the function itself. The <code>latitude: float</code> part tells the SDK "this input should be a number". The AI will see that and know what to pass in.</li>
+    <li><code>"""Get weather forecast for a location."""</code> &mdash; this description is important! It's what the AI reads to decide <em>"is this the right tool for the user's question?"</em></li>
+    <li><code>make_nws_request</code> &mdash; just a helper that visits the weather website. It's the exact same API logic as the old way &mdash; nothing MCP-specific about it.</li>
+    <li><code>get_forecast</code> and <code>get_alerts</code> &mdash; two tools on our "menu". Any MCP client can discover both and call either one.</li>
+    <li><code>mcp.run(transport="stdio")</code> &mdash; opens for business! The server starts listening. <code>"stdio"</code> means it talks through standard input/output &mdash; that's how Claude Desktop and Cursor communicate with local servers.</li>
   </ul>
 
   <div class="callout reveal">
-    <p><strong>Key difference from the old way:</strong> This server doesn't know or care what AI model will use it. It doesn't import OpenAI. It doesn't need any API key. It just exposes tools and lets the protocol handle the rest.</p>
+    <p><strong>Notice what's NOT here:</strong> no OpenAI import, no Anthropic import, no API key, no mention of any specific AI. This server has no idea who will use it. It just puts tools on the menu and waits. Claude can use it. Cursor can use it. Your own app can use it. That's the whole point.</p>
   </div>
 
   <!-- ====== 6. THE CLIENT ====== -->
@@ -647,12 +653,14 @@ async def main():
 asyncio.run(main())</code></pre>
   </div>
 
-  <p class="reveal">What's happening here:</p>
+  <p class="reveal">Think of this as the delivery app placing an order:</p>
   <ul class="explain-list reveal">
-    <li><code>StdioServerParameters</code> &mdash; tells the client how to start the server. It will run <code>python server.py</code> as a subprocess.</li>
-    <li><code>session.initialize()</code> &mdash; the client and server shake hands and agree on the protocol version.</li>
-    <li><code>session.list_tools()</code> &mdash; the client asks: <em>"what tools do you have?"</em> The server responds with names, descriptions, and parameter schemas. <strong>No hardcoding needed.</strong></li>
-    <li><code>session.call_tool("get_forecast", ...)</code> &mdash; the client calls a tool by name and passes arguments. The server runs the function and returns the result.</li>
+    <li><code>StdioServerParameters(command=..., args=[...])</code> &mdash; tells the client <em>"the server is this Python file, here's how to start it."</em> Like telling the delivery app where the restaurant is.</li>
+    <li><code>stdio_client(server_params)</code> &mdash; actually starts the server and opens a connection. The restaurant is now open.</li>
+    <li><code>session.initialize()</code> &mdash; the client and server say hello and agree on which version of MCP to speak. Like a handshake.</li>
+    <li><code>session.list_tools()</code> &mdash; the client asks: <em>"hey, what's on the menu?"</em> The server replies with every tool it has, what each tool does, and what inputs it needs. <strong>The client didn't know any of this in advance.</strong></li>
+    <li><code>session.call_tool("get_forecast", arguments={...})</code> &mdash; the client places an order: <em>"run get_forecast with these coordinates."</em> The server runs the function and sends back the result.</li>
+    <li><code>result.content[0].text</code> &mdash; the response from the server. We just print it.</li>
   </ul>
 
   <div class="callout warn reveal">
