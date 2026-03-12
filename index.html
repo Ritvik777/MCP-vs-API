@@ -327,7 +327,7 @@
     <span class="dot"></span>
     <span>January 2026</span>
     <span class="dot"></span>
-    <span>8 min read</span>
+    <span>10 min read</span>
   </div>
 </header>
 
@@ -659,10 +659,106 @@ asyncio.run(main())</code></pre>
     <p><strong>This is the whole point:</strong> this same client code works with <em>any</em> MCP server. Swap the weather server for a GitHub server, a database server, a file-system server &mdash; the client code doesn't change. The protocol is the same.</p>
   </div>
 
-  <!-- ====== 7. TRY IT YOURSELF ====== -->
+  <!-- ====== 7. HOW CLAUDE PICKS THE TOOL ====== -->
+  <h2 class="reveal">How Does Claude Know Which Tool to Use?</h2>
+
+  <p class="reveal">When Claude Desktop starts, it connects to your server and asks one question: <strong>"What tools do you have?"</strong> Your server replies with this:</p>
+
+  <div class="code-block reveal">
+    <div class="code-header">
+      <span class="code-filename">server response (auto-generated)</span>
+      <span class="code-lang">JSON</span>
+    </div>
+    <pre><code class="language-python">{
+  "name": "get_forecast",
+  "description": "Get weather forecast for a location.",
+  "inputSchema": {
+    "properties": {
+      "latitude": { "type": "number" },
+      "longitude": { "type": "number" }
+    }
+  }
+}</code></pre>
+  </div>
+
+  <p class="reveal">You never wrote that JSON. The SDK generated it from your Python code:</p>
+
+  <div class="code-block reveal">
+    <div class="code-header">
+      <span class="code-filename">server.py</span>
+      <span class="code-lang">Python</span>
+    </div>
+    <pre><code class="language-python">@mcp.tool()
+async def get_forecast(latitude: float, longitude: float) -> str:
+    """Get weather forecast for a location."""</code></pre>
+  </div>
+
+  <ul class="explain-list reveal">
+    <li>The <strong>function name</strong> (<code>get_forecast</code>) became the tool name.</li>
+    <li>The <strong>docstring</strong> (<em>"Get weather forecast..."</em>) became the description.</li>
+    <li>The <strong>type hints</strong> (<code>float</code>) became the parameter schema.</li>
+  </ul>
+
+  <p class="reveal">Now when you ask Claude <em>"What's the weather in New York?"</em>, two things happen:</p>
+
+  <ol class="reveal">
+    <li><strong>MCP handles discovery</strong> &mdash; it tells Claude a tool called <code>get_forecast</code> exists and what it accepts.</li>
+    <li><strong>Claude (the LLM) handles selection</strong> &mdash; it reads the tool name and description, decides it matches your question, figures out the latitude/longitude for New York, and calls the tool.</li>
+  </ol>
+
+  <div class="callout reveal">
+    <p><strong>This is why good names and docstrings matter.</strong> They're literally what the AI reads to decide which tool to pick. A tool called <code>xyz123</code> with no description? Claude won't know when to use it.</p>
+  </div>
+
+  <!-- ====== 8. USE IN CLAUDE DESKTOP ====== -->
+  <h2 class="reveal">Use It in Claude Desktop</h2>
+
+  <p class="reveal">Want to try this yourself? Here's how to connect <strong>our weather server</strong> to Claude Desktop in 3 steps:</p>
+
+  <h3 class="reveal">Step 1: Add the server to Claude's config</h3>
+  <p class="reveal">Open (or create) the file <code>claude_desktop_config.json</code>:</p>
+  <ul class="explain-list reveal">
+    <li><strong>Mac:</strong> <code>~/Library/Application Support/Claude/claude_desktop_config.json</code></li>
+    <li><strong>Windows:</strong> <code>%APPDATA%\Claude\claude_desktop_config.json</code></li>
+  </ul>
+
+  <p class="reveal">Paste this in:</p>
+
+  <div class="code-block reveal">
+    <div class="code-header">
+      <span class="code-filename">claude_desktop_config.json</span>
+      <span class="code-lang">JSON</span>
+    </div>
+    <pre><code class="language-python">{
+  "mcpServers": {
+    "weather": {
+      "command": "uv",
+      "args": [
+        "run", "--with", "mcp[cli]", "--with", "httpx",
+        "python", "/path/to/your/server.py"
+      ]
+    }
+  }
+}</code></pre>
+  </div>
+
+  <p class="reveal">Replace <code>/path/to/your/server.py</code> with the actual path to the file. The <code>uv run --with</code> part auto-installs the dependencies so Claude can find them.</p>
+
+  <h3 class="reveal">Step 2: Restart Claude Desktop</h3>
+  <p class="reveal">Quit (<strong>Cmd+Q</strong> on Mac) and reopen. Claude will launch your server and discover the tools.</p>
+
+  <h3 class="reveal">Step 3: Ask a weather question</h3>
+  <p class="reveal">Type something like: <em>"What's the weather in San Francisco?"</em></p>
+  <p class="reveal">Claude will see your <code>get_forecast</code> tool, call it with the right coordinates, and show you the live forecast &mdash; using <strong>your server</strong>, with zero extra code.</p>
+
+  <div class="callout green reveal">
+    <p><strong>That's the power of MCP:</strong> You built the server once, tested it with <code>client.py</code>, and now Claude Desktop uses the exact same server. No integration code. No SDK changes. Just one config line.</p>
+  </div>
+
+  <!-- ====== 9. TRY IT YOURSELF ====== -->
   <h2 class="reveal">Try It Yourself</h2>
 
-  <p class="reveal">All the code above is real and runnable. Clone the repo and try both approaches:</p>
+  <p class="reveal">All the code is real and runnable. Clone the repo and try both approaches:</p>
 
   <div class="code-block reveal">
     <div class="code-header">
