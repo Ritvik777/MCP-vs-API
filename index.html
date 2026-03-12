@@ -756,8 +756,18 @@ async def get_forecast(latitude: float, longitude: float) -> str:
   <p class="reveal">Quit (<strong>Cmd+Q</strong> on Mac) and reopen. Claude will launch your server and discover the tools.</p>
 
   <h3 class="reveal">Step 3: Ask a weather question</h3>
-  <p class="reveal">Type something like: <em>"What's the weather in San Francisco?"</em></p>
-  <p class="reveal">Claude will see your <code>get_forecast</code> tool, call it with the right coordinates, and show you the live forecast &mdash; using <strong>your server</strong>, with zero extra code.</p>
+  <p class="reveal">Type something like:</p>
+  <div class="code-block reveal">
+    <div class="code-header">
+      <span class="code-filename">paste this into Claude Desktop</span>
+      <span class="code-lang">Prompt</span>
+    </div>
+    <pre><code>Use the get_forecast tool to check the weather at latitude 37.77, longitude -122.42</code></pre>
+  </div>
+  <p class="reveal">
+    <strong>Why so specific?</strong> Claude has built-in web search and might use that instead of your tool if you just ask "What's the weather?". By naming the tool directly, you guarantee it calls <strong>your MCP server</strong>. Once you see it working, you can try vaguer prompts too.
+  </p>
+  <p class="reveal">Claude will call your <code>get_forecast</code> tool, pass the coordinates, and show you the live NWS forecast &mdash; using <strong>your server</strong>, with zero extra code.</p>
 
   <div class="callout green reveal">
     <p><strong>That's the power of MCP:</strong> You built the server once, tested it with <code>client.py</code>, and now Claude Desktop uses the exact same server. No integration code. No SDK changes. Just one config line.</p>
