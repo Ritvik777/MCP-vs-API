@@ -2,9 +2,9 @@
 
 A hands-on technical walkthrough comparing traditional API integration with the **Model Context Protocol (MCP)**. Includes a polished blog post and fully working code you can run yourself.
 
-**[Read the blog post →](https://ritvik777.github.io/MCP-vs-API/)**
+**[Read the blog post](https://ritvik777.github.io/MCP-vs-API/)**
 
-**[Video Tutorial -> ] (https://www.loom.com/share/36a2f8478321432092c597c7666ac1e7)**
+**Video Tutorial -> (https://www.loom.com/share/36a2f8478321432092c597c7666ac1e7)**
 
 ---
 
